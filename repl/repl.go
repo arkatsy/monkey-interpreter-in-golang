@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"monkey-go/lexer"
-	"monkey-go/token"
+	"monkey-go/parser"
 )
 
 const PROMPT = ">>> "
@@ -21,11 +21,26 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		line := scanner.Text()
-
 		l := lexer.New(line)
+		p := parser.New(l)
 
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Printf("%+v\n", tok)
+		program := p.ParseProgram()
+
+		if len(p.Errors()) != 0 {
+			printParserErrors(out, p.Errors())
+			continue
 		}
+
+		io.WriteString(out, program.String())
+		io.WriteString(out, "\n")
+	}
+}
+
+func printParserErrors(out io.Writer, errors []string) {
+	io.WriteString(out, "An Error has occured.\n")
+	io.WriteString(out, " parser errors:\n")
+
+	for _, msg := range errors {
+		io.WriteString(out, "\t"+msg+"\n")
 	}
 }
