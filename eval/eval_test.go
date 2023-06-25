@@ -251,6 +251,10 @@ if (10 > 1) {
 			"foobar",
 			"identifier not found: foobar",
 		},
+		{
+			`"This" - " " + "is" + " " + "a" + " " + "string"`,
+			"unknown operator: STRING - STRING",
+		},
 	}
 
 	for _, tt := range tests {
@@ -337,6 +341,20 @@ func TestStringLiteral(t *testing.T) {
 	}
 
 	if str.Value != "this is a string" {
+		t.Errorf("String has wrong value. got=%q", str.Value)
+	}
+}
+
+func TestStringConcatenation(t *testing.T) {
+	input := `"This" + " " + "is" + " " + "a" + " " + "string"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != "This is a string" {
 		t.Errorf("String has wrong value. got=%q", str.Value)
 	}
 }
