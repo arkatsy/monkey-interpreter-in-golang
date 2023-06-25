@@ -5,7 +5,8 @@ import (
 	"testing"
 )
 
-var src = `
+func TestNextToken(t *testing.T) {
+	var src = `
 	let num = 4;
 	
 	let add = fn(x, y) {
@@ -25,9 +26,10 @@ var src = `
 
 	== != > + - * / ! < >
 
-	`
+	"foobar"
+	"foo bar"
 
-func TestNextToken(t *testing.T) {
+	`
 
 	tests := []struct {
 		expectedType    token.TokenType
@@ -103,6 +105,8 @@ func TestNextToken(t *testing.T) {
 		{token.BANG, "!"},
 		{token.LT, "<"},
 		{token.GT, ">"},
+		{token.STRING, "foobar"},
+		{token.STRING, "foo bar"},
 		{token.EOF, ""},
 	}
 
