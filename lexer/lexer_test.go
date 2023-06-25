@@ -1,7 +1,6 @@
-package lexer_test
+package lexer
 
 import (
-	"monkey-go/lexer"
 	"monkey-go/token"
 	"testing"
 )
@@ -107,7 +106,7 @@ func TestNextToken(t *testing.T) {
 		{token.EOF, ""},
 	}
 
-	l := lexer.New(src)
+	l := New(src)
 
 	for i, tt := range tests {
 		tok := l.NextToken()
